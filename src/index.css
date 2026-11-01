@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/* Warna & fon tema aplikasi */
+@theme {
+  --color-blush-50: #fff7fa;
+  --color-blush-100: #fde7ef;
+  --color-blush-200: #fbd0e0;
+  --color-blush-300: #f7aecb;
+  --color-blush-400: #f18bb3;
+  --color-blush-500: #e86a9b;
+  --color-blush-600: #cf4f82;
+  --color-lilac-100: #f1ebfb;
+  --color-lilac-200: #e2d6f6;
+  --color-lilac-300: #cdb9ee;
+  --color-lilac-500: #9b7fd1;
+  --color-cream: #fffaf4;
+  --color-plum: #6b4a6e;
+  --color-plum-soft: #9a7d9c;
+
+  --font-sans: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-arabic: "Amiri", "Geeza Pro", serif;
+
+  --shadow-soft: 0 10px 30px -12px rgb(207 79 130 / 0.25);
+  --shadow-glow: 0 18px 40px -10px rgb(232 106 155 / 0.55);
+}
+
+html, body, #root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--color-plum);
+  background:
+    radial-gradient(circle at 10% 0%, #fde7ef 0, transparent 45%),
+    radial-gradient(circle at 100% 30%, #ece3fa 0, transparent 40%),
+    radial-gradient(circle at 0% 100%, #f6e9fb 0, transparent 45%),
+    #fffaf4;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Corak bintang Islamik yang sangat lembut di latar */
+.islamic-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23e86a9b' stroke-opacity='0.08' stroke-width='1'%3E%3Cpath d='M28 6l6.4 15.6L50 28l-15.6 6.4L28 50l-6.4-15.6L6 28l15.6-6.4z'/%3E%3Crect x='16' y='16' width='24' height='24' transform='rotate(45 28 28)'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Animasi riak apabila butang ditekan */
+@keyframes ripple {
+  from { transform: scale(0.85); opacity: 0.55; }
+  to { transform: scale(1.45); opacity: 0; }
+}
+.animate-ripple { animation: ripple 0.6s ease-out forwards; }
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+.animate-pop { animation: pop 0.25s ease-out; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(6deg); }
+}
+.animate-float { animation: float 5s ease-in-out infinite; }
+
+@keyframes toast-in {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.animate-toast { animation: toast-in 0.25s ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ripple, .animate-pop, .animate-float, .animate-toast { animation: none; }
+}
