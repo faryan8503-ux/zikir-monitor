@@ -4,6 +4,17 @@ import MenuButtons from './components/MenuButtons'
 import Flower, { Crescent, Sparkle } from './components/Flower'
 import { useZikirCounter } from './useZikirCounter'
 import { DAILY_TARGET } from './zikirData'
+import { playWaterDrop } from './waterDrop'
+
+const SOUND_KEY = 'zikir-monitor:sound'
+
+function loadSound() {
+  try {
+    return localStorage.getItem(SOUND_KEY) !== 'off'
+  } catch {
+    return true
+  }
+}
 
 const HARI = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu']
 const BULAN = ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember']
@@ -15,6 +26,24 @@ function formatDate(d) {
 export default function App() {
   const { zikir, zikirCount, total, increment, changeZikir, resetCurrent } = useZikirCounter()
   const [toast, setToast] = useState(null)
+  const [soundOn, setSoundOn] = useState(loadSound)
+
+  const toggleSound = () => {
+    const next = !soundOn
+    setSoundOn(next)
+    try {
+      localStorage.setItem(SOUND_KEY, next ? 'on' : 'off')
+    } catch {
+      // abaikan
+    }
+    if (next) playWaterDrop()
+    setToast(next ? 'Bunyi titisan air dihidupkan 💧' : 'Bunyi dimatikan')
+  }
+
+  const handleTap = () => {
+    if (soundOn) playWaterDrop()
+    increment()
+  }
 
   const progress = total / DAILY_TARGET
   const percent = Math.min(100, Math.round(progress * 100))
@@ -46,7 +75,7 @@ export default function App() {
         style={{ paddingTop: 'max(1.25rem, env(safe-area-inset-top))', paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}
       >
         {/* 1. Tajuk aplikasi */}
-        <header className="text-center">
+        <header className="relative text-center">
           <p className="font-arabic text-lg text-blush-500" lang="ar" dir="rtl">بِسْمِ ٱللّٰهِ</p>
           <div className="mt-1 flex items-center justify-center gap-2">
             <Crescent />
@@ -54,6 +83,14 @@ export default function App() {
             <Flower size={24} />
           </div>
           <p className="mt-1 text-sm font-medium text-plum-soft">{formatDate(new Date())}</p>
+          <button type="button" onClick={toggleSound} aria-pressed={soundOn}
+            aria-label={soundOn ? 'Matikan bunyi' : 'Hidupkan bunyi'}
+            className={`absolute right-0 top-0 grid size-10 place-items-center rounded-full shadow-soft ring-1 transition active:scale-90 ${soundOn ? 'bg-white text-blush-500 ring-blush-100' : 'bg-white/60 text-plum-soft ring-lilac-200'}`}>
+            <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 5L6 9H3v6h3l5 4z" fill="currentColor" fillOpacity="0.15" />
+              {soundOn ? <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" /> : <path d="M16 9l5 6M21 9l-5 6" />}
+            </svg>
+          </button>
         </header>
 
         {/* 2–4. Kad kaunter utama */}
@@ -67,8 +104,9 @@ export default function App() {
               <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
             <div className="min-w-0 text-center">
-              <p className="font-arabic text-3xl leading-snug text-blush-600" lang="ar" dir="rtl">{zikir.arabic}</p>
+              <p className={`font-arabic leading-snug text-blush-600 ${zikir.arabic.length > 30 ? 'text-2xl' : 'text-3xl'}`} lang="ar" dir="rtl">{zikir.arabic}</p>
               <p className="text-xl font-bold text-plum">{zikir.name}</p>
+              {zikir.latin && <p className="text-sm font-medium italic text-blush-500">{zikir.latin}</p>}
               <p className="text-xs text-plum-soft">{zikir.meaning}</p>
             </div>
             <button type="button" onClick={() => changeZikir(1)} aria-label="Zikir seterusnya"
@@ -79,7 +117,7 @@ export default function App() {
 
           {/* Butang kira */}
           <div className="mt-4">
-            <CounterButton count={zikirCount} progress={progress} onTap={increment} />
+            <CounterButton count={zikirCount} progress={progress} onTap={handleTap} />
           </div>
 
           <div className="mt-3 flex justify-center">
