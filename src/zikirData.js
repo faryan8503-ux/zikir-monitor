@@ -6,6 +6,13 @@ export const ZIKIR_LIST = [
   { id: 'lailahaillallah', name: 'La ilaha illallah', arabic: 'لَا إِلٰهَ إِلَّا ٱللّٰهُ', meaning: 'Tiada Tuhan melainkan Allah' },
   { id: 'astaghfirullah', name: 'Astaghfirullah', arabic: 'أَسْتَغْفِرُ ٱللّٰهَ', meaning: 'Aku memohon ampun kepada Allah' },
   {
+    id: 'hasbunallah',
+    name: 'Hasbunallah',
+    latin: 'Hasbunallah wa ni‘mal wakil',
+    arabic: 'حَسْبُنَا ٱللّٰهُ وَنِعْمَ ٱلْوَكِيلُ',
+    meaning: 'Cukuplah Allah bagi kami, dan Dialah sebaik-baik Pelindung (Ali ‘Imran: 173)',
+  },
+  {
     id: 'selawatjibril',
     name: 'Selawat Jibril',
     latin: 'Sallallahu ‘ala Muhammad',
