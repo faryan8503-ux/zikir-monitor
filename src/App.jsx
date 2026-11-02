@@ -4,7 +4,7 @@ import MenuButtons from './components/MenuButtons'
 import Flower, { Crescent, Sparkle } from './components/Flower'
 import { useZikirCounter } from './useZikirCounter'
 import { DAILY_TARGET } from './zikirData'
-import { playWaterDrop } from './waterDrop'
+import { playAlhamdulillah, playWaterDrop } from './waterDrop'
 
 const SOUND_KEY = 'zikir-monitor:sound'
 
@@ -41,7 +41,13 @@ export default function App() {
   }
 
   const handleTap = () => {
-    if (soundOn) playWaterDrop()
+    const next = zikirCount + 1
+    const milestone = next % 100 === 0
+    if (soundOn) {
+      if (milestone) playAlhamdulillah()
+      else playWaterDrop()
+    }
+    if (milestone) setToast(`Alhamdulillah! ${next} kali ${zikir.name} ✨`)
     increment()
   }
 
