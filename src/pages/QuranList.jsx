@@ -62,6 +62,16 @@ export default function QuranList() {
           )}
         </section>
 
+        <button type="button" onClick={() => go('/koleksi')}
+          className="mt-4 flex w-full items-center gap-3 rounded-3xl bg-white/90 p-4 text-left shadow-soft ring-1 ring-blush-100 transition active:scale-[0.98]">
+          <span className="text-2xl">🤲</span>
+          <span className="flex-1">
+            <span className="block font-bold text-plum">Ayat Penting & Doa Al-Quran</span>
+            <span className="block text-xs text-plum-soft">20 ayat & surah penting · 29 doa</span>
+          </span>
+          <span className="text-blush-500">›</span>
+        </button>
+
         {notes.length > 0 && (
           <button type="button" onClick={() => go('/tadabbur')}
             className="mt-4 flex w-full items-center gap-3 rounded-3xl bg-gradient-to-br from-lilac-100 to-blush-100 p-4 text-left shadow-soft ring-1 ring-lilac-200 transition active:scale-[0.98]">
