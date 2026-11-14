@@ -104,7 +104,8 @@ export default function QuranList() {
 
         <p className="mt-6 text-center text-[11px] leading-relaxed text-plum-soft">
           Teks Al-Quran: Tanzil Project (tanzil.net, CC BY 3.0) melalui Quran Academy.<br />
-          Terjemahan: Abdullah Muhammad Basmeih, melalui Tanzil. {toArabicNumber(114)} surah.
+          Terjemahan: Abdullah Muhammad Basmeih, melalui Tanzil.<br />
+          Warna tajwid: data Al-Quran Cloud (alquran.cloud). {toArabicNumber(114)} surah.
         </p>
       </main>
     </div>
