@@ -30,7 +30,6 @@ export default function QuranReader({ surah, focusAyat }) {
   const [khatamShown, setKhatamShown] = useState(0)
   const [detail, setDetail] = useState(null) // { type: 'rule' | 'waqaf', key, sample }
   const [guideOpen, setGuideOpen] = useState(false)
-  const showRule = useCallback((key, sample) => setDetail({ type: 'rule', key, sample }), [])
   const showWaqaf = useCallback((key) => setDetail({ type: 'waqaf', key }), [])
   const { bookmark, readIndex, today, khatam, markRead } = useQuranProgress()
   const clearToast = useCallback(() => setToast(null), [])
@@ -74,6 +73,13 @@ export default function QuranReader({ surah, focusAyat }) {
   }
 
   const fontSize = FONT_SIZES[prefs.font] ?? FONT_SIZES[1]
+
+  const showRule = (key, ayah, start, end) => {
+    const ctx = data && start != null
+      ? { surah, ayah, text: data.ar[ayah - 1], start, end, wm: data.wm?.[ayah] }
+      : null
+    setDetail({ type: 'rule', key, ctx })
+  }
 
   return (
     <div className="islamic-pattern min-h-dvh">
@@ -130,7 +136,7 @@ export default function QuranReader({ surah, focusAyat }) {
                 <li key={a} id={`ayat-${a}`}
                   className={`scroll-mt-24 rounded-3xl p-4 shadow-soft ring-1 ${isBookmark ? 'bg-blush-50 ring-2 ring-blush-300' : 'bg-white/90 ring-blush-100'}`}>
                   <p className="font-quran text-plum" style={{ fontSize, lineHeight: 2.15 }} lang="ar" dir="rtl">
-                    <AyahText text={text} spans={data.tj?.[i]} showTajwid={prefs.tajwid} onRule={showRule} onWaqaf={showWaqaf} />{' '}
+                    <AyahText text={text} spans={data.tj?.[i]} showTajwid={prefs.tajwid} onRule={(key, start, end) => showRule(key, a, start, end)} onWaqaf={showWaqaf} />{' '}
                     <span role="button" tabIndex={0} onClick={() => setDetail({ type: 'end' })} className="cursor-pointer whitespace-nowrap text-blush-500">﴿{toArabicNumber(a)}﴾</span>
                     {isSajda && <span className="text-lilac-500"> ۩</span>}
                   </p>
@@ -140,7 +146,10 @@ export default function QuranReader({ surah, focusAyat }) {
                       {isSajda && <span className="font-semibold text-lilac-500"> (Ayat Sajdah)</span>}
                     </p>
                   )}
-                  {prefs.tajwid && <AyahChips text={text} spans={data.tj?.[i]} onRule={showRule} onWaqaf={showWaqaf} />}
+                  {prefs.tajwid && <AyahChips text={text} spans={data.tj?.[i]} onRule={(key) => {
+                    const span = data.tj?.[i]?.find((sp) => sp[2] === key)
+                    showRule(key, a, span?.[0], span?.[1])
+                  }} onWaqaf={showWaqaf} />}
                   <div className="mt-3 flex items-center justify-between gap-2 border-t border-blush-100 pt-3">
                     <span className="text-[11px] font-medium text-plum-soft">
                       Juz {data.juz[i]} · Muka surat {data.page[i]}{isRead && !isBookmark ? ' · ✓' : ''}

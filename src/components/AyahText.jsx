@@ -17,7 +17,7 @@ export function buildPieces(text, spans, showTajwid) {
     const r = rules[i]
     let j = i
     while (j < text.length && rules[j] === r && !WAQAF[text[j]]) j++
-    pieces.push({ text: text.slice(i, j), rule: r })
+    pieces.push({ text: text.slice(i, j), rule: r, start: i, end: j })
     i = j
   }
   return pieces
@@ -42,7 +42,7 @@ export default function AyahText({ text, spans, showTajwid, onRule, onWaqaf }) {
     }
     if (p.rule && TAJWID_RULES[p.rule]) {
       return (
-        <span key={k} role="button" tabIndex={0} onClick={() => onRule(p.rule, p.text)} style={{ color: TAJWID_RULES[p.rule].color }} className="cursor-pointer">
+        <span key={k} role="button" tabIndex={0} onClick={() => onRule(p.rule, p.start, p.end)} style={{ color: TAJWID_RULES[p.rule].color }} className="cursor-pointer">
           {p.text}
         </span>
       )
