@@ -37,4 +37,5 @@ npm run dev     # mulakan aplikasi
 - Teks Arab: Tanzil Project (tanzil.net, CC BY 3.0), versi Uthmani daripada Quran Academy
 - Terjemahan Melayu: Abdullah Muhammad Basmeih, melalui Tanzil
 - Warna tajwid: data Al-Quran Cloud (pakej npm @kmaslesa/tajweed), dipadankan huruf demi huruf dengan teks Uthmani oleh `scripts/tajwid_align.py`
+- Audio contoh bacaan: audio perkataan Quran.com (audio.qurancdn.com) & bacaan ayat Mishary Alafasy (everyayah.com); padanan perkataan oleh `scripts/word_map.py`
 - Data diambil melalui github.com/fawazahmed0/quran-api

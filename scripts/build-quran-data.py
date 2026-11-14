@@ -5,6 +5,11 @@ Terjemahan: Abdullah Muhammad Basmeih (melalui Tanzil).
 Guna: python3 scripts/build-quran-data.py <folder-sumber>
 Folder sumber mesti ada ara-quranacademy.json, msa-abdullahmuhamma.json, info.json
 dan tajweed.json (data.json daripada pakej npm @kmaslesa/tajweed, format Al-Quran Cloud).
+
+Pilihan: python3 scripts/build-quran-data.py <folder-sumber> <folder-quran-com>
+Folder Quran.com mengandungi 1.json ... 114.json daripada
+api.quran.com/api/v4/verses/by_chapter/<n>?words=true&per_page=300&word_fields=text_uthmani
+dan digunakan untuk memadankan perkataan dengan audio perkataan Quran.com.
 """
 import json
 import os
@@ -12,8 +17,10 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 from tajwid_align import transfer  # noqa: E402
+from word_map import map_words  # noqa: E402
 
 src = sys.argv[1]
+qcom_dir = sys.argv[2] if len(sys.argv) > 2 else None
 root = os.path.join(os.path.dirname(__file__), '..')
 
 NAMES = """Al-Fatihah|Al-Baqarah|Ali 'Imran|An-Nisa'|Al-Ma'idah|Al-An'am|Al-A'raf|Al-Anfal|At-Taubah|Yunus|Hud|Yusuf|Ar-Ra'd|Ibrahim|Al-Hijr|An-Nahl|Al-Isra'|Al-Kahf|Maryam|Taha|Al-Anbiya'|Al-Hajj|Al-Mu'minun|An-Nur|Al-Furqan|Asy-Syu'ara'|An-Naml|Al-Qasas|Al-'Ankabut|Ar-Rum|Luqman|As-Sajdah|Al-Ahzab|Saba'|Fatir|Yasin|As-Saffat|Sad|Az-Zumar|Ghafir|Fussilat|Asy-Syura|Az-Zukhruf|Ad-Dukhan|Al-Jathiyah|Al-Ahqaf|Muhammad|Al-Fath|Al-Hujurat|Qaf|Adz-Dzariyat|At-Tur|An-Najm|Al-Qamar|Ar-Rahman|Al-Waqi'ah|Al-Hadid|Al-Mujadalah|Al-Hasyr|Al-Mumtahanah|As-Saff|Al-Jumu'ah|Al-Munafiqun|At-Taghabun|At-Talaq|At-Tahrim|Al-Mulk|Al-Qalam|Al-Haqqah|Al-Ma'arij|Nuh|Al-Jinn|Al-Muzzammil|Al-Muddaththir|Al-Qiyamah|Al-Insan|Al-Mursalat|An-Naba'|An-Nazi'at|'Abasa|At-Takwir|Al-Infitar|Al-Mutaffifin|Al-Insyiqaq|Al-Buruj|At-Tariq|Al-A'la|Al-Ghasyiyah|Al-Fajr|Al-Balad|Asy-Syams|Al-Lail|Ad-Duha|Asy-Syarh|At-Tin|Al-'Alaq|Al-Qadr|Al-Bayyinah|Az-Zalzalah|Al-'Adiyat|Al-Qari'ah|At-Takathur|Al-'Asr|Al-Humazah|Al-Fil|Quraisy|Al-Ma'un|Al-Kauthar|Al-Kafirun|An-Nasr|Al-Masad|Al-Ikhlas|Al-Falaq|An-Nas""".split('|')
@@ -48,6 +55,17 @@ for ch in info['chapters']:
         # Tajwid: bagi setiap ayat, senarai [mula, tamat, kod hukum]
         'tj': [t[2] for t in texts],
     }
+    if qcom_dir:
+        # Padanan perkataan -> nombor perkataan Quran.com, hanya untuk ayat yang berbeza
+        qverses = json.load(open(os.path.join(qcom_dir, f'{n}.json')))['verses']
+        assert len(qverses) == len(texts)
+        wm = {}
+        for a, (qv, t) in enumerate(zip(qverses, texts), 1):
+            qwords = [w['text_uthmani'] for w in qv['words'] if w['char_type_name'] == 'word']
+            m = map_words(t[0].split(' '), qwords)
+            if m != list(range(1, len(qwords) + 1)):
+                wm[a] = [m, len(qwords)]
+        data['wm'] = wm
     with open(os.path.join(root, 'public', 'quran', f'{n}.json'), 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, separators=(',', ':'))
     for v in verses:

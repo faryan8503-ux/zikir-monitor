@@ -1,31 +1,6 @@
 import { AYAH_END_INFO, TAJWID_GROUPS, TAJWID_RULES, WAQAF, WAQAF_COLOR } from '../quran/tajwid'
 
-// Penerangan satu hukum tajwid atau tanda waqaf
-export function RuleDetail({ item, onClose, onGuide }) {
-  if (!item) return null
-  const isWaqaf = item.type === 'waqaf'
-  const rule = isWaqaf ? WAQAF[item.key] : TAJWID_RULES[item.key]
-  const color = isWaqaf ? WAQAF_COLOR : rule.color
-  return (
-    <div>
-      <div className="flex items-center gap-3">
-        <span className="grid size-12 shrink-0 place-items-center rounded-2xl font-quran text-2xl" style={{ background: `${color}1f`, color }} lang="ar" dir="rtl">
-          {isWaqaf ? rule.symbol : (item.sample || '●')}
-        </span>
-        <div className="min-w-0">
-          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color }}>{isWaqaf ? 'Tanda Waqaf' : 'Hukum Tajwid'}</p>
-          <h3 className="text-lg font-bold text-plum">{rule.name}</h3>
-        </div>
-      </div>
-      {isWaqaf && <p className="mt-3 inline-block rounded-full px-3 py-1 text-sm font-bold" style={{ background: `${color}1f`, color }}>{rule.action}</p>}
-      <p className="mt-3 text-[15px] leading-relaxed text-plum">{rule.info}</p>
-      <div className="mt-5 grid grid-cols-2 gap-3">
-        <button type="button" onClick={onGuide} className="rounded-2xl bg-white py-3 text-sm font-bold text-plum ring-1 ring-blush-200 active:scale-95">📘 Panduan penuh</button>
-        <button type="button" onClick={onClose} className="rounded-2xl bg-gradient-to-br from-blush-400 to-blush-500 py-3 text-sm font-bold text-white shadow-glow active:scale-95">Faham 👍</button>
-      </div>
-    </div>
-  )
-}
+export { default as RuleDetail } from './RuleDetail'
 
 // Panduan semua warna tajwid dan tanda waqaf
 export function TajwidGuide({ onClose }) {

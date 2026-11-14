@@ -147,3 +147,24 @@ export const AYAH_END_INFO = {
   action: 'Digalakkan berhenti',
   info: 'Bulatan nombor menandakan hujung ayat. Digalakkan berhenti dan menarik nafas di sini.',
 }
+
+// Contoh klasik bagi setiap hukum: teks, rujukan [surah, ayat, perkataan Quran.com], cara baca
+export const TAJWID_EXAMPLES = {
+  g: [{ ar: "إِنَّ", s: 2, a: 6, words: [1], baca: "in-nna — tahan dengung pada nun selama 2 harakat" }, { ar: "وَمِمَّا", s: 2, a: 3, words: [6], baca: "wa mim-maa — tahan dengung pada mim selama 2 harakat" }],
+  f: [{ ar: "ءَأَنذَرۡتَهُمۡ", s: 2, a: 6, words: [6], baca: "a-an(ng)dzartahum — bunyi nun disamarkan sambil berdengung sebelum huruf dzal" }],
+  c: [{ ar: "تَرۡمِیهِم بِحِجَارَةࣲ", s: 105, a: 4, words: [1, 2], baca: "tarmiihim(m) bihijaaratin — mim disamarkan di bibir sebelum huruf ba" }],
+  i: [{ ar: "أَنۢبِئۡهُم", s: 2, a: 33, words: [3], baca: "am-bi'hum — bunyi nun bertukar menjadi mim, dengan dengung" }],
+  a: [{ ar: "مَن یَقُولُ", s: 2, a: 8, words: [3, 4], baca: "may-yaquulu — nun dimasukkan ke dalam ya dengan dengung" }],
+  u: [{ ar: "مِّن رَّبِّهِمۡۖ", s: 2, a: 5, words: [4, 5], baca: "mir-rabbihim — nun tidak dibaca, terus masuk ke huruf ra tanpa dengung" }],
+  w: [{ ar: "قُلُوبِهِم مَّرَضࣱ", s: 2, a: 10, words: [2, 3], baca: "quluubihim-maradhun — dua mim bergabung dengan dengung" }],
+  d: [{ ar: "قَد تَّبَیَّنَ", s: 2, a: 256, words: [5, 6], baca: "qat-tabayyana — huruf dal dimasukkan ke dalam huruf ta" }],
+  b: [{ ar: "نَخۡلُقكُّم", s: 77, a: 20, words: [2], baca: "nakhluk-kum — huruf qaf dimasukkan ke dalam huruf kaf" }],
+  q: [{ ar: "یَلِدۡ", s: 112, a: 3, words: [2], baca: "yalid(d) — huruf dal mati dibaca melantun" }],
+  n: [{ ar: "مَـٰلِكِ", s: 1, a: 4, words: [1], baca: "maa-liki — panjangkan 'maa' 2 harakat" }],
+  p: [{ ar: "ٱلۡعَـٰلَمِینَ", s: 1, a: 2, words: [4], baca: "al-'aalamiin — bila berhenti, 'miin' boleh dipanjangkan 2, 4 atau 6 harakat" }],
+  o: [{ ar: "جَاۤءَ", s: 110, a: 1, words: [2], baca: "jaaaa-a — Mad Wajib: panjangkan 4 atau 5 harakat sebelum hamzah" }, { ar: "بِمَاۤ أُنزِلَ", s: 2, a: 4, words: [3, 4], baca: "bimaaaa unzila — Mad Jaiz: panjangkan 4 atau 5 harakat" }],
+  m: [{ ar: "ٱلضَّاۤلِّینَ", s: 1, a: 7, words: [9], baca: "adh-dhaaaaal-liin — panjangkan 6 harakat" }],
+  h: [{ ar: "ٱهۡدِنَا", s: 1, a: 6, words: [1], baca: "ihdinaa — bila memulakan bacaan, hamzah dibaca 'i'. Jika disambung, hamzah gugur" }],
+  l: [{ ar: "ٱلرَّحۡمَـٰنِ", s: 1, a: 3, words: [1], baca: "ar-rahmaan — huruf lam tidak dibaca, terus ke huruf ra" }],
+  s: [{ ar: "كَفَرُوا۟", s: 2, a: 6, words: [3], baca: "kafaruu — alif di hujung tidak dibaca" }],
+}
