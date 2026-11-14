@@ -4,6 +4,8 @@ import Toast from '../components/Toast'
 import AyahText, { rulesInAyah } from '../components/AyahText'
 import BottomSheet from '../components/BottomSheet'
 import { RuleDetail, TajwidGuide } from '../components/TajwidInfo'
+import TadabburEditor from '../components/TadabburEditor'
+import { noteKey, useTadabbur } from '../tadabbur/useTadabbur'
 import { TAJWID_GROUPS, TAJWID_RULES, WAQAF, WAQAF_COLOR } from '../quran/tajwid'
 import { go } from '../useHashRoute'
 import { ayatIndex, loadSurah, surahInfo, toArabicNumber } from '../quran/quranUtils'
@@ -21,7 +23,7 @@ function loadPrefs() {
   }
 }
 
-export default function QuranReader({ surah, focusAyat }) {
+export default function QuranReader({ surah, focusAyat, openTadabbur }) {
   const info = surahInfo(surah)
   const [data, setData] = useState(null)
   const [error, setError] = useState(false)
@@ -30,6 +32,8 @@ export default function QuranReader({ surah, focusAyat }) {
   const [khatamShown, setKhatamShown] = useState(0)
   const [detail, setDetail] = useState(null) // { type: 'rule' | 'waqaf', key, sample }
   const [guideOpen, setGuideOpen] = useState(false)
+  const [tadabburAyah, setTadabburAyah] = useState(openTadabbur && focusAyat ? focusAyat : null)
+  const { notes } = useTadabbur()
   const showWaqaf = useCallback((key) => setDetail({ type: 'waqaf', key }), [])
   const { bookmark, readIndex, today, khatam, markRead } = useQuranProgress()
   const clearToast = useCallback(() => setToast(null), [])
@@ -150,18 +154,24 @@ export default function QuranReader({ surah, focusAyat }) {
                     const span = data.tj?.[i]?.find((sp) => sp[2] === key)
                     showRule(key, a, span?.[0], span?.[1])
                   }} onWaqaf={showWaqaf} />}
-                  <div className="mt-3 flex items-center justify-between gap-2 border-t border-blush-100 pt-3">
-                    <span className="text-[11px] font-medium text-plum-soft">
-                      Juz {data.juz[i]} · Muka surat {data.page[i]}{isRead && !isBookmark ? ' · ✓' : ''}
-                    </span>
-                    {isBookmark ? (
-                      <span className="rounded-full bg-blush-400 px-3 py-1.5 text-xs font-bold text-white">📍 Bacaan terakhir</span>
-                    ) : (
-                      <button type="button" onClick={() => handleMark(a)}
-                        className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-blush-500 ring-1 ring-blush-200 transition active:scale-95">
-                        🔖 Baca sampai sini
+                  <div className="mt-3 border-t border-blush-100 pt-3">
+                    <p className="text-[11px] font-medium text-plum-soft">
+                      Juz {data.juz[i]} · Muka surat {data.page[i]}{isRead && !isBookmark ? ' · ✓ Sudah dibaca' : ''}
+                    </p>
+                    <div className="mt-2 flex items-center justify-between gap-2">
+                      <button type="button" onClick={() => setTadabburAyah(a)}
+                        className={`rounded-full px-3 py-1.5 text-xs font-bold ring-1 transition active:scale-95 ${notes[noteKey(surah, a)] ? 'bg-lilac-100 text-lilac-500 ring-lilac-200' : 'bg-white text-plum ring-blush-200'}`}>
+                        {notes[noteKey(surah, a)] ? '📝 Lihat tadabbur' : '✍️ Tadabbur'}
                       </button>
-                    )}
+                      {isBookmark ? (
+                        <span className="rounded-full bg-blush-400 px-3 py-1.5 text-xs font-bold text-white">📍 Bacaan terakhir</span>
+                      ) : (
+                        <button type="button" onClick={() => handleMark(a)}
+                          className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-blush-500 ring-1 ring-blush-200 transition active:scale-95">
+                          🔖 Baca sampai sini
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </li>
               )
@@ -193,6 +203,17 @@ export default function QuranReader({ surah, focusAyat }) {
         {detail?.type === 'end'
           ? <EndDetail onClose={() => setDetail(null)} onGuide={() => { setDetail(null); setGuideOpen(true) }} />
           : <RuleDetail item={detail} onClose={() => setDetail(null)} onGuide={() => { setDetail(null); setGuideOpen(true) }} />}
+      </BottomSheet>
+      <BottomSheet open={!!tadabburAyah && !!data} onClose={() => setTadabburAyah(null)} label="Tadabbur" dismissible={false}>
+        {tadabburAyah && data && (
+          <TadabburEditor key={tadabburAyah} surah={surah} ayah={tadabburAyah}
+            arabic={data.ar[tadabburAyah - 1]} translation={data.ms[tadabburAyah - 1]}
+            onClose={() => setTadabburAyah(null)}
+            onSaved={(result) => {
+              setTadabburAyah(null)
+              setToast(result === 'deleted' ? 'Catatan tadabbur dipadam' : '📝 Catatan tadabbur disimpan')
+            }} />
+        )}
       </BottomSheet>
       <BottomSheet open={guideOpen} onClose={() => setGuideOpen(false)} label="Panduan tajwid">
         <TajwidGuide onClose={() => setGuideOpen(false)} />

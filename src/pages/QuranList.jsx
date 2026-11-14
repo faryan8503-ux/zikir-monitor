@@ -4,6 +4,7 @@ import { go } from '../useHashRoute'
 import { SURAHS } from '../quran/surahs'
 import { TOTAL_AYAT, ayatIndex, juzOf, nextAyat, surahEndIndex, surahInfo, toArabicNumber } from '../quran/quranUtils'
 import { useQuranProgress } from '../quran/useQuranProgress'
+import { useTadabbur } from '../tadabbur/useTadabbur'
 
 // Buang tanda baca supaya carian "al baqarah" = "Al-Baqarah"
 const simplify = (t) => t.toLowerCase().replace(/[^a-z0-9]/g, '')
@@ -11,6 +12,7 @@ const simplify = (t) => t.toLowerCase().replace(/[^a-z0-9]/g, '')
 export default function QuranList() {
   const { bookmark, readIndex, percent, today, khatam, resetProgress } = useQuranProgress()
   const [query, setQuery] = useState('')
+  const { list: notes } = useTadabbur()
   const next = nextAyat(bookmark)
 
   const list = useMemo(() => {
@@ -59,6 +61,16 @@ export default function QuranList() {
             </button>
           )}
         </section>
+
+        <button type="button" onClick={() => go('/tadabbur')}
+          className="mt-4 flex w-full items-center gap-3 rounded-3xl bg-gradient-to-br from-lilac-100 to-blush-100 p-4 text-left shadow-soft ring-1 ring-lilac-200 transition active:scale-[0.98]">
+          <span className="text-2xl">📝</span>
+          <span className="flex-1">
+            <span className="block font-bold text-plum">Jurnal Tadabbur</span>
+            <span className="block text-xs text-plum-soft">{notes.length ? `${notes.length} catatan renungan` : 'Tulis renungan anda bagi setiap ayat'}</span>
+          </span>
+          <span className="text-blush-500">›</span>
+        </button>
 
         {/* Carian */}
         <div className="mt-5">

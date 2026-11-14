@@ -22,6 +22,7 @@ npm run dev     # mulakan aplikasi
 - `src/pages/QuranList.jsx` — senarai 114 surah & kemajuan khatam
 - `src/pages/QuranReader.jsx` — bacaan surah, tanda "baca sampai sini"
 - `src/quran/` — maklumat surah & logik kemajuan bacaan
+- `src/pages/TadabburJournal.jsx`, `src/components/TadabburEditor.jsx`, `src/tadabbur/` — Jurnal Tadabbur
 - `public/quran/` — teks Al-Quran & terjemahan (satu fail bagi setiap surah)
 - `scripts/build-quran-data.py` — skrip untuk menjana data Al-Quran
 - `src/components/CounterButton.jsx` — butang kira bulat merah jambu
