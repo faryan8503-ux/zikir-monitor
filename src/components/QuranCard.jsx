@@ -1,11 +1,13 @@
 import { go } from '../useHashRoute'
 import { useQuranProgress } from '../quran/useQuranProgress'
+import { useTadabbur } from '../tadabbur/useTadabbur'
 import { juzOf, nextAyat, surahInfo } from '../quran/quranUtils'
 
 // Kad Al-Quran di skrin utama: tunjuk sampai mana bacaan & kemajuan khatam
 export default function QuranCard() {
   const { bookmark, percent, today, khatam } = useQuranProgress()
   const next = nextAyat(bookmark)
+  const { list: notes } = useTadabbur()
   const where = bookmark
     ? `${surahInfo(bookmark.s).name}, ayat ${bookmark.a} · Juz ${juzOf(bookmark.s, bookmark.a)}`
     : 'Belum mula — mulakan dari Al-Fatihah'
@@ -44,6 +46,9 @@ export default function QuranCard() {
           Senarai Surah
         </button>
       </div>
+      <button type="button" onClick={() => go('/tadabbur')} className="mt-3 w-full py-1 text-sm font-semibold text-lilac-500">
+        📝 Jurnal Tadabbur{notes.length ? ` · ${notes.length} catatan` : ''} ›
+      </button>
     </section>
   )
 }

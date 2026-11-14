@@ -1,6 +1,7 @@
 import Home from './pages/Home'
 import QuranList from './pages/QuranList'
 import QuranReader from './pages/QuranReader'
+import TadabburJournal from './pages/TadabburJournal'
 import { useHashRoute } from './useHashRoute'
 
 // Memilih halaman berdasarkan alamat (#/, #/quran, #/quran/2?ayat=5)
@@ -11,9 +12,10 @@ export default function App() {
   if (reader) {
     const surah = Number(reader[1])
     if (surah >= 1 && surah <= 114) {
-      return <QuranReader key={surah} surah={surah} focusAyat={Number(params.get('ayat')) || null} />
+      return <QuranReader key={surah} surah={surah} focusAyat={Number(params.get('ayat')) || null} openTadabbur={params.get('tadabbur') === '1'} />
     }
   }
+  if (path === '/tadabbur') return <TadabburJournal />
   if (path.startsWith('/quran')) return <QuranList />
   return <Home />
 }
