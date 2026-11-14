@@ -1,6 +1,7 @@
 // Semua bunyi dihasilkan terus dalam pelayar (tiada fail audio diperlukan)
 let ctx = null
-let noise = null
+const noiseCache = {}
+const pluckCache = {}
 
 function getCtx() {
   const AudioCtx = window.AudioContext || window.webkitAudioContext
@@ -11,12 +12,41 @@ function getCtx() {
 }
 
 function noiseBuffer(c) {
-  if (!noise) {
-    noise = c.createBuffer(1, Math.floor(c.sampleRate * 0.1), c.sampleRate)
-    const data = noise.getChannelData(0)
+  if (!noiseCache[c.sampleRate]) {
+    const buf = c.createBuffer(1, Math.floor(c.sampleRate * 0.1), c.sampleRate)
+    const data = buf.getChannelData(0)
     for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1
+    noiseCache[c.sampleRate] = buf
   }
-  return noise
+  return noiseCache[c.sampleRate]
+}
+
+// Tali dipetik (kaedah Karplus-Strong): bunyi kecapi yang semula jadi
+function pluckBuffer(c, freq) {
+  const key = `${c.sampleRate}:${freq}`
+  if (!pluckCache[key]) {
+    const sr = c.sampleRate
+    const buf = c.createBuffer(1, Math.floor(sr * 1.6), sr)
+    const out = buf.getChannelData(0)
+    const n = Math.round(sr / freq)
+    const ring = new Float32Array(n)
+    let prev = 0
+    for (let i = 0; i < n; i++) {
+      // hingar yang dilembutkan supaya petikan tidak terlalu tajam
+      prev = prev * 0.5 + (Math.random() * 2 - 1) * 0.5
+      ring[i] = prev
+    }
+    let idx = 0
+    for (let i = 0; i < out.length; i++) {
+      const next = (idx + 1) % n
+      const v = ring[idx]
+      ring[idx] = 0.996 * 0.5 * (v + ring[next])
+      out[i] = v
+      idx = next
+    }
+    pluckCache[key] = buf
+  }
+  return pluckCache[key]
 }
 
 // Sampul bunyi: naik cepat, kemudian pudar
@@ -82,11 +112,49 @@ function klik(c, t) {
   click(c, t, { freq: 2800, q: 2, peak: 0.25, decay: 0.015 })
 }
 
+// 5. Tasbih kristal: manik kaca berlaga, nyaring dan berkilau
+function kristal(c, t) {
+  const p = vary(2600, 0.05)
+  click(c, t, { freq: 5200, q: 12, peak: 2.8, decay: 0.02 })
+  tone(c, t, { from: p, peak: 0.16, decay: 0.35 })
+  tone(c, t, { from: p * 1.58, peak: 0.06, decay: 0.25 })
+  const t2 = t + vary(0.05, 0.2)
+  click(c, t2, { freq: 6000, q: 12, peak: 1.1, decay: 0.018 })
+  tone(c, t2, { from: p * 1.12, peak: 0.06, decay: 0.25 })
+}
+
+// 6. Petikan kecapi: not pentatonik rawak, lembut dan menenangkan
+const KECAPI_NOTES = [392, 440, 523.25, 587.33, 659.25]
+function kecapi(c, t) {
+  const freq = KECAPI_NOTES[Math.floor(Math.random() * KECAPI_NOTES.length)]
+  const src = c.createBufferSource()
+  src.buffer = pluckBuffer(c, freq)
+  const lp = c.createBiquadFilter()
+  lp.type = 'lowpass'
+  lp.frequency.value = 3200
+  const g = c.createGain()
+  g.gain.setValueAtTime(0.9, t)
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 1.5)
+  src.connect(lp).connect(g).connect(c.destination)
+  src.start(t)
+  src.stop(t + 1.55)
+}
+
+// 7. Bubble wrap: "pap" plastik dipicit
+function bubble(c, t) {
+  click(c, t, { freq: vary(1400, 0.15), q: 1.2, peak: 1.4, decay: 0.025 })
+  tone(c, t, { from: vary(160), to: 70, glide: 0.03, peak: 0.4, decay: 0.05 })
+  click(c, t + vary(0.012, 0.3), { freq: 2600, q: 2, peak: 0.35, decay: 0.012 })
+}
+
 export const SOUNDS = [
   { id: 'tasbih', label: 'Manik Tasbih', emoji: '📿', play: tasbih },
   { id: 'air', label: 'Titisan Air', emoji: '💧', play: air },
-  { id: 'pop', label: 'Pop Gelembung', emoji: '🫧', play: pop },
+  { id: 'pop', label: 'Pop Gelembung', emoji: '🎈', play: pop },
   { id: 'klik', label: 'Klik Lembut', emoji: '🌸', play: klik },
+  { id: 'kristal', label: 'Tasbih Kristal', emoji: '✨', play: kristal },
+  { id: 'kecapi', label: 'Petikan Kecapi', emoji: '🎵', play: kecapi },
+  { id: 'bubble', label: 'Bubble Wrap', emoji: '🫧', play: bubble },
 ]
 
 export function playTap(id) {
