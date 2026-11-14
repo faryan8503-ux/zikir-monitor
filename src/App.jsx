@@ -4,16 +4,20 @@ import MenuButtons from './components/MenuButtons'
 import Flower, { Crescent, Sparkle } from './components/Flower'
 import { useZikirCounter } from './useZikirCounter'
 import { DAILY_TARGET } from './zikirData'
-import { playAlhamdulillah, playWaterDrop } from './waterDrop'
+import SoundPicker from './components/SoundPicker'
+import { SOUNDS, playAlhamdulillah, playTap } from './sounds'
 
 const SOUND_KEY = 'zikir-monitor:sound'
 
+// Pilihan bunyi disimpan dalam pelayar. Nilai lama 'on' kini menjadi bunyi tasbih.
 function loadSound() {
   try {
-    return localStorage.getItem(SOUND_KEY) !== 'off'
+    const saved = localStorage.getItem(SOUND_KEY)
+    if (saved === 'off' || SOUNDS.some((s) => s.id === saved)) return saved
   } catch {
-    return true
+    // abaikan
   }
+  return 'tasbih'
 }
 
 const HARI = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu']
@@ -26,26 +30,24 @@ function formatDate(d) {
 export default function App() {
   const { zikir, zikirCount, total, increment, changeZikir, resetCurrent } = useZikirCounter()
   const [toast, setToast] = useState(null)
-  const [soundOn, setSoundOn] = useState(loadSound)
+  const [sound, setSound] = useState(loadSound)
 
-  const toggleSound = () => {
-    const next = !soundOn
-    setSoundOn(next)
+  const changeSound = (id) => {
+    setSound(id)
     try {
-      localStorage.setItem(SOUND_KEY, next ? 'on' : 'off')
+      localStorage.setItem(SOUND_KEY, id)
     } catch {
       // abaikan
     }
-    if (next) playWaterDrop()
-    setToast(next ? 'Bunyi titisan air dihidupkan 💧' : 'Bunyi dimatikan')
+    playTap(id)
   }
 
   const handleTap = () => {
     const next = zikirCount + 1
     const milestone = next % 100 === 0
-    if (soundOn) {
+    if (sound !== 'off') {
       if (milestone) playAlhamdulillah()
-      else playWaterDrop()
+      else playTap(sound)
     }
     if (milestone) setToast(`Alhamdulillah! ${next} kali ${zikir.name} ✨`)
     increment()
@@ -89,14 +91,7 @@ export default function App() {
             <Flower size={24} />
           </div>
           <p className="mt-1 text-sm font-medium text-plum-soft">{formatDate(new Date())}</p>
-          <button type="button" onClick={toggleSound} aria-pressed={soundOn}
-            aria-label={soundOn ? 'Matikan bunyi' : 'Hidupkan bunyi'}
-            className={`absolute right-0 top-0 grid size-10 place-items-center rounded-full shadow-soft ring-1 transition active:scale-90 ${soundOn ? 'bg-white text-blush-500 ring-blush-100' : 'bg-white/60 text-plum-soft ring-lilac-200'}`}>
-            <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M11 5L6 9H3v6h3l5 4z" fill="currentColor" fillOpacity="0.15" />
-              {soundOn ? <path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" /> : <path d="M16 9l5 6M21 9l-5 6" />}
-            </svg>
-          </button>
+          <SoundPicker value={sound} onChange={changeSound} />
         </header>
 
         {/* 2–4. Kad kaunter utama */}
