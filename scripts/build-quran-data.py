@@ -3,11 +3,15 @@
 Teks Arab: Quran Academy (Uthmani, berasaskan Tanzil, CC BY 3.0).
 Terjemahan: Abdullah Muhammad Basmeih (melalui Tanzil).
 Guna: python3 scripts/build-quran-data.py <folder-sumber>
-Folder sumber mesti ada ara-quranacademy.json, msa-abdullahmuhamma.json, info.json.
+Folder sumber mesti ada ara-quranacademy.json, msa-abdullahmuhamma.json, info.json
+dan tajweed.json (data.json daripada pakej npm @kmaslesa/tajweed, format Al-Quran Cloud).
 """
 import json
 import os
 import sys
+
+sys.path.insert(0, os.path.dirname(__file__))
+from tajwid_align import transfer  # noqa: E402
 
 src = sys.argv[1]
 root = os.path.join(os.path.dirname(__file__), '..')
@@ -18,12 +22,15 @@ assert len(NAMES) == 114, len(NAMES)
 ar = json.load(open(os.path.join(src, 'ara-quranacademy.json')))['quran']
 ms = json.load(open(os.path.join(src, 'msa-abdullahmuhamma.json')))['quran']
 info = json.load(open(os.path.join(src, 'info.json')))
-assert len(ar) == len(ms) == 6236
+tajweed = json.load(open(os.path.join(src, 'tajweed.json')))
+assert len(ar) == len(ms) == len(tajweed) == 6236
 
 by_surah = {}
-for a, m in zip(ar, ms):
+for a, m, t in zip(ar, ms, tajweed):
     assert (a['chapter'], a['verse']) == (m['chapter'], m['verse'])
-    by_surah.setdefault(a['chapter'], []).append((a['text'], m['text']))
+    # Indeks dalam JavaScript dikira dalam unit UTF-16; pastikan tiada aksara di luar BMP
+    assert all(ord(c) < 0x10000 for c in a['text'])
+    by_surah.setdefault(a['chapter'], []).append((a['text'], m['text'], transfer(t, a['text'])))
 
 surahs = []
 juz_starts = {}
@@ -38,6 +45,8 @@ for ch in info['chapters']:
         'juz': [v['juz'] for v in verses],
         'page': [v['page'] for v in verses],
         'sajda': [v['verse'] for v in verses if v['sajda']],
+        # Tajwid: bagi setiap ayat, senarai [mula, tamat, kod hukum]
+        'tj': [t[2] for t in texts],
     }
     with open(os.path.join(root, 'public', 'quran', f'{n}.json'), 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, separators=(',', ':'))
