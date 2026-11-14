@@ -12,7 +12,7 @@ export default function App() {
   if (reader) {
     const surah = Number(reader[1])
     if (surah >= 1 && surah <= 114) {
-      return <QuranReader key={surah} surah={surah} focusAyat={Number(params.get('ayat')) || null} openTadabbur={params.get('tadabbur') === '1'} />
+      return <QuranReader key={surah} surah={surah} focusAyat={Number(params.get('ayat')) || null} openTadabbur={params.get('tadabbur') === '1'} openNote={params.get('catatan') === '1'} />
     }
   }
   if (path === '/tadabbur') return <TadabburJournal />

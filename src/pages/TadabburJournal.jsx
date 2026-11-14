@@ -24,10 +24,10 @@ export default function TadabburJournal() {
       .join('\n\n— — —\n\n')
 
   const share = async () => {
-    const text = `Jurnal Tadabbur — Zikir Monitor\n\n${exportText()}`
+    const text = `Catatan Peribadi — Zikir Monitor\n\n${exportText()}`
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'Jurnal Tadabbur', text })
+        await navigator.share({ title: 'Catatan Peribadi', text })
         return
       }
       await navigator.clipboard.writeText(text)
@@ -40,14 +40,14 @@ export default function TadabburJournal() {
   return (
     <div className="islamic-pattern min-h-dvh">
       <main className="mx-auto max-w-md px-5 pb-10" style={{ paddingBottom: 'max(2.5rem, env(safe-area-inset-bottom))' }}>
-        <PageHeader title="Jurnal Tadabbur" subtitle={`${list.length} catatan renungan`} onBack={() => go('/quran')} />
+        <PageHeader title="Catatan Peribadi" subtitle={`${list.length} catatan renungan saya`} onBack={() => go('/quran')} />
 
         {list.length === 0 ? (
           <section className="rounded-[2rem] bg-white/90 p-6 text-center shadow-soft ring-1 ring-blush-100">
             <p className="text-4xl">📖✍️</p>
             <p className="mt-3 font-bold text-plum">Belum ada catatan</p>
             <p className="mt-1 text-sm leading-relaxed text-plum-soft">
-              Semasa membaca Al-Quran, tekan butang <b>✍️ Tadabbur</b> pada mana-mana ayat untuk menulis renungan anda.
+              Semasa membaca Al-Quran, tekan <b>📖 Tadabbur</b> pada mana-mana ayat, kemudian <b>✍️ Tulis catatan peribadi</b>.
             </p>
             <button type="button" onClick={() => go('/quran')}
               className="mt-4 rounded-2xl bg-gradient-to-br from-blush-400 to-blush-500 px-5 py-3 text-sm font-bold text-white shadow-glow active:scale-95">
@@ -61,7 +61,7 @@ export default function TadabburJournal() {
                 const first = PROMPTS.find((p) => n.answers[p.id]?.trim())
                 return (
                   <li key={`${n.s}:${n.a}`}>
-                    <button type="button" onClick={() => go(`/quran/${n.s}?ayat=${n.a}&tadabbur=1`)}
+                    <button type="button" onClick={() => go(`/quran/${n.s}?ayat=${n.a}&catatan=1`)}
                       className="w-full rounded-3xl bg-white/90 p-4 text-left shadow-soft ring-1 ring-blush-100 transition active:scale-[0.98]">
                       <div className="flex items-center justify-between gap-2">
                         <span className="font-bold text-plum">{surahInfo(n.s).name}, ayat {n.a}</span>
