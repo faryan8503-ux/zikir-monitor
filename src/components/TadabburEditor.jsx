@@ -27,7 +27,7 @@ export default function TadabburEditor({ surah, ayah, arabic, translation, onClo
   }
 
   const remove = () => {
-    if (window.confirm('Padam catatan tadabbur untuk ayat ini?')) {
+    if (window.confirm('Padam catatan untuk ayat ini?')) {
       deleteNote(surah, ayah)
       onSaved('deleted')
     }
@@ -35,7 +35,7 @@ export default function TadabburEditor({ surah, ayah, arabic, translation, onClo
 
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-widest text-blush-400">✍️ Tadabbur · {surahInfo(surah).name} {ayah}</p>
+      <p className="text-xs font-semibold uppercase tracking-widest text-blush-400">✍️ Catatan Peribadi · {surahInfo(surah).name} {ayah}</p>
       <p className="mt-2 max-h-40 overflow-y-auto rounded-2xl bg-blush-50 px-3 py-2 font-quran text-2xl leading-loose text-plum" lang="ar" dir="rtl">
         {arabic} <span className="text-blush-500">﴿{toArabicNumber(ayah)}﴾</span>
       </p>

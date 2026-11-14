@@ -62,15 +62,17 @@ export default function QuranList() {
           )}
         </section>
 
-        <button type="button" onClick={() => go('/tadabbur')}
-          className="mt-4 flex w-full items-center gap-3 rounded-3xl bg-gradient-to-br from-lilac-100 to-blush-100 p-4 text-left shadow-soft ring-1 ring-lilac-200 transition active:scale-[0.98]">
-          <span className="text-2xl">📝</span>
-          <span className="flex-1">
-            <span className="block font-bold text-plum">Jurnal Tadabbur</span>
-            <span className="block text-xs text-plum-soft">{notes.length ? `${notes.length} catatan renungan` : 'Tulis renungan anda bagi setiap ayat'}</span>
-          </span>
-          <span className="text-blush-500">›</span>
-        </button>
+        {notes.length > 0 && (
+          <button type="button" onClick={() => go('/tadabbur')}
+            className="mt-4 flex w-full items-center gap-3 rounded-3xl bg-gradient-to-br from-lilac-100 to-blush-100 p-4 text-left shadow-soft ring-1 ring-lilac-200 transition active:scale-[0.98]">
+            <span className="text-2xl">📝</span>
+            <span className="flex-1">
+              <span className="block font-bold text-plum">Catatan Peribadi</span>
+              <span className="block text-xs text-plum-soft">{notes.length ? `${notes.length} catatan renungan saya` : 'Renungan yang anda tulis sendiri (pilihan)'}</span>
+            </span>
+            <span className="text-blush-500">›</span>
+          </button>
+        )}
 
         {/* Carian */}
         <div className="mt-5">

@@ -5,6 +5,7 @@ import AyahText, { rulesInAyah } from '../components/AyahText'
 import BottomSheet from '../components/BottomSheet'
 import { RuleDetail, TajwidGuide } from '../components/TajwidInfo'
 import TadabburEditor from '../components/TadabburEditor'
+import TadabburSheet, { SurahIntro } from '../components/TadabburSheet'
 import { noteKey, useTadabbur } from '../tadabbur/useTadabbur'
 import { TAJWID_GROUPS, TAJWID_RULES, WAQAF, WAQAF_COLOR } from '../quran/tajwid'
 import { go } from '../useHashRoute'
@@ -23,7 +24,7 @@ function loadPrefs() {
   }
 }
 
-export default function QuranReader({ surah, focusAyat, openTadabbur }) {
+export default function QuranReader({ surah, focusAyat, openTadabbur, openNote }) {
   const info = surahInfo(surah)
   const [data, setData] = useState(null)
   const [error, setError] = useState(false)
@@ -33,6 +34,7 @@ export default function QuranReader({ surah, focusAyat, openTadabbur }) {
   const [detail, setDetail] = useState(null) // { type: 'rule' | 'waqaf', key, sample }
   const [guideOpen, setGuideOpen] = useState(false)
   const [tadabburAyah, setTadabburAyah] = useState(openTadabbur && focusAyat ? focusAyat : null)
+  const [noteAyah, setNoteAyah] = useState(openNote && focusAyat ? focusAyat : null)
   const { notes } = useTadabbur()
   const showWaqaf = useCallback((key) => setDetail({ type: 'waqaf', key }), [])
   const { bookmark, readIndex, today, khatam, markRead } = useQuranProgress()
@@ -115,6 +117,8 @@ export default function QuranReader({ surah, focusAyat, openTadabbur }) {
           </div>
         </div>
 
+        <SurahIntro surah={surah} />
+
         {surah !== 1 && surah !== 9 && (
           <p className="mb-4 rounded-3xl bg-gradient-to-br from-blush-100 to-lilac-100 py-4 text-center font-quran text-3xl leading-loose text-blush-600 ring-1 ring-blush-100" lang="ar" dir="rtl">
             {BISMILLAH}
@@ -160,8 +164,8 @@ export default function QuranReader({ surah, focusAyat, openTadabbur }) {
                     </p>
                     <div className="mt-2 flex items-center justify-between gap-2">
                       <button type="button" onClick={() => setTadabburAyah(a)}
-                        className={`rounded-full px-3 py-1.5 text-xs font-bold ring-1 transition active:scale-95 ${notes[noteKey(surah, a)] ? 'bg-lilac-100 text-lilac-500 ring-lilac-200' : 'bg-white text-plum ring-blush-200'}`}>
-                        {notes[noteKey(surah, a)] ? '📝 Lihat tadabbur' : '✍️ Tadabbur'}
+                        className="rounded-full bg-lilac-100 px-3 py-1.5 text-xs font-bold text-lilac-500 ring-1 ring-lilac-200 transition active:scale-95">
+                        📖 Tadabbur{notes[noteKey(surah, a)] ? ' · 📝' : ''}
                       </button>
                       {isBookmark ? (
                         <span className="rounded-full bg-blush-400 px-3 py-1.5 text-xs font-bold text-white">📍 Bacaan terakhir</span>
@@ -204,14 +208,24 @@ export default function QuranReader({ surah, focusAyat, openTadabbur }) {
           ? <EndDetail onClose={() => setDetail(null)} onGuide={() => { setDetail(null); setGuideOpen(true) }} />
           : <RuleDetail item={detail} onClose={() => setDetail(null)} onGuide={() => { setDetail(null); setGuideOpen(true) }} />}
       </BottomSheet>
-      <BottomSheet open={!!tadabburAyah && !!data} onClose={() => setTadabburAyah(null)} label="Tadabbur" dismissible={false}>
+      <BottomSheet open={!!tadabburAyah && !!data} onClose={() => setTadabburAyah(null)} label="Tadabbur">
         {tadabburAyah && data && (
-          <TadabburEditor key={tadabburAyah} surah={surah} ayah={tadabburAyah}
+          <TadabburSheet surah={surah} ayah={tadabburAyah}
             arabic={data.ar[tadabburAyah - 1]} translation={data.ms[tadabburAyah - 1]}
-            onClose={() => setTadabburAyah(null)}
+            hasNote={!!notes[noteKey(surah, tadabburAyah)]}
+            onChangeAyah={setTadabburAyah}
+            onWriteNote={() => { setNoteAyah(tadabburAyah); setTadabburAyah(null) }}
+            onClose={() => setTadabburAyah(null)} />
+        )}
+      </BottomSheet>
+      <BottomSheet open={!!noteAyah && !!data} onClose={() => setNoteAyah(null)} label="Catatan" dismissible={false}>
+        {noteAyah && data && (
+          <TadabburEditor key={noteAyah} surah={surah} ayah={noteAyah}
+            arabic={data.ar[noteAyah - 1]} translation={data.ms[noteAyah - 1]}
+            onClose={() => setNoteAyah(null)}
             onSaved={(result) => {
-              setTadabburAyah(null)
-              setToast(result === 'deleted' ? 'Catatan tadabbur dipadam' : '📝 Catatan tadabbur disimpan')
+              setNoteAyah(null)
+              setToast(result === 'deleted' ? 'Catatan dipadam' : '📝 Catatan disimpan')
             }} />
         )}
       </BottomSheet>

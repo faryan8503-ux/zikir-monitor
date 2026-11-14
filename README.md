@@ -22,7 +22,7 @@ npm run dev     # mulakan aplikasi
 - `src/pages/QuranList.jsx` — senarai 114 surah & kemajuan khatam
 - `src/pages/QuranReader.jsx` — bacaan surah, tanda "baca sampai sini"
 - `src/quran/` — maklumat surah & logik kemajuan bacaan
-- `src/pages/TadabburJournal.jsx`, `src/components/TadabburEditor.jsx`, `src/tadabbur/` — Jurnal Tadabbur
+- `src/pages/TadabburJournal.jsx`, `src/components/TadabburEditor.jsx`, `src/tadabbur/` — Catatan peribadi (pilihan)
 - `public/quran/` — teks Al-Quran & terjemahan (satu fail bagi setiap surah)
 - `scripts/build-quran-data.py` — skrip untuk menjana data Al-Quran
 - `src/components/CounterButton.jsx` — butang kira bulat merah jambu
@@ -39,4 +39,5 @@ npm run dev     # mulakan aplikasi
 - Terjemahan Melayu: Abdullah Muhammad Basmeih, melalui Tanzil
 - Warna tajwid: data Al-Quran Cloud (pakej npm @kmaslesa/tajweed), dipadankan huruf demi huruf dengan teks Uthmani oleh `scripts/tajwid_align.py`
 - Audio contoh bacaan: audio perkataan Quran.com (audio.qurancdn.com) & bacaan ayat Mishary Alafasy (everyayah.com); padanan perkataan oleh `scripts/word_map.py`
+- Tadabbur (huraian ayat & pengenalan surah): Tafsir Ringkas Kementerian Agama RI (Bahasa Indonesia), melalui github.com/gadingnst/quran-api; dijana oleh `scripts/build-tafsir-data.py`
 - Data diambil melalui github.com/fawazahmed0/quran-api
