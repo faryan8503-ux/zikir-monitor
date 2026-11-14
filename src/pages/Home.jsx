@@ -6,6 +6,7 @@ import { useZikirCounter } from '../useZikirCounter'
 import { DAILY_TARGET } from '../zikirData'
 import SoundPicker from '../components/SoundPicker'
 import QuranCard from '../components/QuranCard'
+import { go } from '../useHashRoute'
 import { SOUNDS, playAlhamdulillah, playTap } from '../sounds'
 
 const SOUND_KEY = 'zikir-monitor:sound'
@@ -162,6 +163,17 @@ export default function Home() {
 
         {/* Bacaan Al-Quran */}
         <QuranCard />
+
+        {/* Ayat penting & doa */}
+        <button type="button" onClick={() => go('/koleksi')}
+          className="flex items-center gap-3 rounded-[2rem] bg-gradient-to-br from-lilac-100 to-white/90 p-4 text-left shadow-soft ring-1 ring-lilac-200 transition active:scale-[0.98]">
+          <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-white text-2xl shadow-soft">🤲</span>
+          <span className="flex-1">
+            <span className="block font-bold text-plum">Ayat Penting & Doa Al-Quran</span>
+            <span className="block text-xs text-plum-soft">Ayat Kursi, 3 Qul, doa Rabbana & lain-lain</span>
+          </span>
+          <span className="text-lg text-blush-400">›</span>
+        </button>
 
         {/* 8. Butang menu */}
         <MenuButtons onSelect={(label) => setToast(`Halaman ${label} akan datang tidak lama lagi 🌷`)} />
