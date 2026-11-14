@@ -17,10 +17,23 @@ npm run dev     # mulakan aplikasi
 
 ## Struktur fail
 
-- `src/App.jsx` — skrin utama
+- `src/App.jsx` — pemilih halaman (skrin utama, senarai surah, bacaan)
+- `src/pages/Home.jsx` — skrin utama
+- `src/pages/QuranList.jsx` — senarai 114 surah & kemajuan khatam
+- `src/pages/QuranReader.jsx` — bacaan surah, tanda "baca sampai sini"
+- `src/quran/` — maklumat surah & logik kemajuan bacaan
+- `public/quran/` — teks Al-Quran & terjemahan (satu fail bagi setiap surah)
+- `scripts/build-quran-data.py` — skrip untuk menjana data Al-Quran
 - `src/components/CounterButton.jsx` — butang kira bulat merah jambu
 - `src/components/MenuButtons.jsx` — butang Statistik, Rekod, Sasaran, Tetapan
 - `src/components/Flower.jsx` — hiasan bunga, bintang dan bulan sabit
+- `src/sounds.js` — bunyi tekan & suara Alhamdulillah
 - `src/useZikirCounter.js` — logik kiraan (disimpan dalam pelayar, bermula semula setiap hari)
 - `src/zikirData.js` — senarai zikir dan sasaran harian
 - `src/index.css` — warna, fon dan animasi
+
+## Sumber Al-Quran
+
+- Teks Arab: Tanzil Project (tanzil.net, CC BY 3.0), versi Uthmani daripada Quran Academy
+- Terjemahan Melayu: Abdullah Muhammad Basmeih, melalui Tanzil
+- Data diambil melalui github.com/fawazahmed0/quran-api

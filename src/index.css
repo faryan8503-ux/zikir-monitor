@@ -20,6 +20,7 @@
   --font-sans: "Quicksand", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Playfair Display", Georgia, serif;
   --font-arabic: "Amiri", "Geeza Pro", serif;
+  --font-quran: "Amiri Quran", "Amiri", "Geeza Pro", serif;
 
   --shadow-soft: 0 10px 30px -12px rgb(207 79 130 / 0.25);
   --shadow-glow: 0 18px 40px -10px rgb(232 106 155 / 0.55);
