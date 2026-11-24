@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import CounterButton from '../components/CounterButton'
 import MenuButtons from '../components/MenuButtons'
 import Flower, { Crescent, Sparkle } from '../components/Flower'
@@ -6,6 +6,7 @@ import { useZikirCounter } from '../useZikirCounter'
 import { DAILY_TARGET } from '../zikirData'
 import SoundPicker from '../components/SoundPicker'
 import QuranCard from '../components/QuranCard'
+import VoicePanel from '../components/VoicePanel'
 import { go } from '../useHashRoute'
 import { SOUNDS, playAlhamdulillah, playTap } from '../sounds'
 
@@ -53,6 +54,19 @@ export default function Home() {
     }
     if (milestone) setToast(`Alhamdulillah! ${next} kali ${zikir.name} ✨`)
     increment()
+  }
+
+  // Kiraan dengan suara: tiada bunyi (supaya mikrofon tidak terdengar bunyi app)
+  const countRef = useRef(zikirCount)
+  countRef.current = zikirCount
+  const handleVoice = (n) => {
+    const before = countRef.current
+    const after = before + n
+    countRef.current = after
+    if (Math.floor(after / 100) > Math.floor(before / 100)) {
+      setToast(`Alhamdulillah! ${Math.floor(after / 100) * 100} kali ${zikir.name} ✨`)
+    }
+    increment(n)
   }
 
   const progress = total / DAILY_TARGET
@@ -130,6 +144,8 @@ export default function Home() {
               ↺ Set semula
             </button>
           </div>
+
+          <VoicePanel zikir={zikir} onCount={handleVoice} />
         </section>
 
         {/* 5–7. Sasaran, bar kemajuan & jumlah hari ini */}
