@@ -10,6 +10,9 @@ import VoicePanel from '../components/VoicePanel'
 import { go } from '../useHashRoute'
 import { SOUNDS, playAlhamdulillah, playTap } from '../sounds'
 
+// Nama pengguna yang dipaparkan dalam ucapan di skrin utama
+const USER_NAME = 'Azlinyanii'
+
 const SOUND_KEY = 'zikir-monitor:sound'
 
 // Pilihan bunyi disimpan dalam pelayar. Nilai lama 'on' kini menjadi bunyi tasbih.
@@ -106,7 +109,10 @@ export default function Home() {
             <h1 className="font-display text-4xl italic text-plum">Zikir Monitor</h1>
             <Flower size={24} />
           </div>
-          <p className="mt-1 text-sm font-medium text-plum-soft">{formatDate(new Date())}</p>
+          <p className="mt-2 inline-block rounded-full bg-white/70 px-4 py-1 text-[15px] font-semibold text-blush-600 shadow-soft ring-1 ring-blush-100">
+            Assalamualaikum, {USER_NAME} 🌸
+          </p>
+          <p className="mt-1.5 text-sm font-medium text-plum-soft">{formatDate(new Date())}</p>
           <SoundPicker value={sound} onChange={changeSound} />
         </header>
 
