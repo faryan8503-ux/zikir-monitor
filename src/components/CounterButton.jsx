@@ -4,7 +4,6 @@ import { useState } from 'react'
 // Cincin di sekelilingnya menunjukkan kemajuan ke arah sasaran harian.
 export default function CounterButton({ count, progress, onTap }) {
   const [ripples, setRipples] = useState([])
-  const [popKey, setPopKey] = useState(0)
 
   const radius = 118
   const circumference = 2 * Math.PI * radius
@@ -12,7 +11,6 @@ export default function CounterButton({ count, progress, onTap }) {
 
   const handleTap = () => {
     onTap()
-    setPopKey((k) => k + 1)
     const id = Date.now() + Math.random()
     setRipples((r) => [...r, id])
     setTimeout(() => setRipples((r) => r.filter((x) => x !== id)), 600)
@@ -50,7 +48,7 @@ export default function CounterButton({ count, progress, onTap }) {
         <span className="pointer-events-none absolute inset-3 rounded-full border-2 border-dashed border-white/40" />
         <span className="pointer-events-none absolute left-9 top-7 h-10 w-16 -rotate-30 rounded-full bg-white/30 blur-md" />
         <span className="relative flex flex-col items-center">
-          <span key={popKey} className="animate-pop text-6xl font-bold tabular-nums drop-shadow-sm">{count}</span>
+          <span key={count} className="animate-pop text-6xl font-bold tabular-nums drop-shadow-sm">{count}</span>
           <span className="mt-1 text-sm font-semibold tracking-wide text-white/90">Tekan di sini</span>
         </span>
       </button>

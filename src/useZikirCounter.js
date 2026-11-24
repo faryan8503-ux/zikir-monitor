@@ -42,11 +42,11 @@ export function useZikirCounter() {
   const zikirCount = current.counts[zikir.id] ?? 0
   const total = Object.values(current.counts).reduce((a, b) => a + b, 0)
 
-  const increment = () =>
+  const increment = (by = 1) =>
     setDay((prev) => {
       const base = prev.date === todayKey() ? prev : emptyDay()
       const id = ZIKIR_LIST[base.zikirIndex].id
-      return { ...base, counts: { ...base.counts, [id]: (base.counts[id] ?? 0) + 1 } }
+      return { ...base, counts: { ...base.counts, [id]: (base.counts[id] ?? 0) + by } }
     })
 
   const changeZikir = (step) =>
