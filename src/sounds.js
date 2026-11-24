@@ -215,3 +215,17 @@ if (typeof window !== 'undefined' && window.speechSynthesis) {
   window.speechSynthesis.getVoices()
   window.speechSynthesis.addEventListener?.('voiceschanged', () => window.speechSynthesis.getVoices())
 }
+
+// Satu not lembut (seperti marimba) untuk Mod Irama Asma'ul Husna
+export function playNote(freq, duration = 1.1) {
+  try {
+    const c = getCtx()
+    if (!c) return
+    const t = c.currentTime + 0.01
+    tone(c, t, { from: freq, peak: 0.22, decay: duration })
+    tone(c, t, { from: freq * 2, peak: 0.05, decay: duration * 0.5 })
+    tone(c, t, { from: freq * 4, peak: 0.015, decay: duration * 0.25 })
+  } catch {
+    // abaikan
+  }
+}

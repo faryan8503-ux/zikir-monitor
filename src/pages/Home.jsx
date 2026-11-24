@@ -197,6 +197,17 @@ export default function Home() {
           <span className="text-lg text-blush-400">›</span>
         </button>
 
+        {/* Asma'ul Husna */}
+        <button type="button" onClick={() => go('/asmaulhusna')}
+          className="flex items-center gap-3 rounded-[2rem] bg-gradient-to-br from-blush-100 to-white/90 p-4 text-left shadow-soft ring-1 ring-blush-200 transition active:scale-[0.98]">
+          <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-white font-arabic text-xl text-blush-600 shadow-soft" lang="ar">٩٩</span>
+          <span className="flex-1">
+            <span className="block font-bold text-plum">Asma'ul Husna</span>
+            <span className="block text-xs text-plum-soft">99 nama Allah · hafal dengan irama</span>
+          </span>
+          <span className="text-lg text-blush-400">›</span>
+        </button>
+
         {/* 8. Butang menu */}
         <MenuButtons onSelect={(label) => setToast(`Halaman ${label} akan datang tidak lama lagi 🌷`)} />
 
