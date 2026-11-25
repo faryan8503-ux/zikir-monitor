@@ -3,7 +3,7 @@ import CounterButton from '../components/CounterButton'
 import MenuButtons from '../components/MenuButtons'
 import Flower, { Crescent, Sparkle } from '../components/Flower'
 import { useZikirCounter } from '../useZikirCounter'
-import { DAILY_TARGET } from '../zikirData'
+import { DAILY_TARGET, REZEKI_LIST } from '../zikirData'
 import SoundPicker from '../components/SoundPicker'
 import QuranCard from '../components/QuranCard'
 import VoicePanel from '../components/VoicePanel'
@@ -34,7 +34,8 @@ function formatDate(d) {
 }
 
 export default function Home() {
-  const { zikir, zikirCount, total, increment, changeZikir, resetCurrent } = useZikirCounter()
+  const { zikir, zikirCount, total, counts, increment, changeZikir, resetCurrent } = useZikirCounter()
+  const rezekiDone = REZEKI_LIST.filter((z) => (counts[z.id] ?? 0) >= z.target).length
   const [toast, setToast] = useState(null)
   const [sound, setSound] = useState(loadSound)
 
@@ -182,6 +183,31 @@ export default function Home() {
             </p>
           </div>
         </section>
+
+        {/* Amalan Rezeki Harian */}
+        <button type="button" onClick={() => go('/rezeki')}
+          className="rounded-[2rem] bg-gradient-to-br from-[#fff3e6] to-white/90 p-4 text-left shadow-soft ring-1 ring-[#fde4cf] transition active:scale-[0.98]">
+          <span className="flex items-center gap-3">
+            <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-white text-2xl shadow-soft">🌿</span>
+            <span className="flex-1">
+              <span className="block font-bold text-plum">Amalan Rezeki Harian</span>
+              <span className="block text-xs text-plum-soft">
+                {rezekiDone === REZEKI_LIST.length ? 'Selesai hari ini ✓ Alhamdulillah' : `${rezekiDone} / ${REZEKI_LIST.length} selesai · 11x · 11x · 44x`}
+              </span>
+            </span>
+            <span className="text-lg text-blush-400">›</span>
+          </span>
+          <span className="mt-3 grid grid-cols-3 gap-2">
+            {REZEKI_LIST.map((z) => {
+              const c = Math.min(counts[z.id] ?? 0, z.target)
+              return (
+                <span key={z.id} className="block h-2 overflow-hidden rounded-full bg-white ring-1 ring-[#fde4cf]">
+                  <span className="block h-full rounded-full bg-gradient-to-r from-[#f6c08f] to-blush-400" style={{ width: `${(c / z.target) * 100}%` }} />
+                </span>
+              )
+            })}
+          </span>
+        </button>
 
         {/* Bacaan Al-Quran */}
         <QuranCard />

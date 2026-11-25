@@ -23,6 +23,9 @@ const PATTERNS = {
   hasbunallah: [/حسبنا/g, /hasbun/g],
   selawatjibril: [/محمد/g, /m[ou]hamm?[ae]d/g],
   wamaramaita: [/لكن ?الله/g, /laki?nn?al+ah/g],
+  rabbiinni: [/فقير/g, /faq[ie]+[rl]/g],
+  innafatahna: [/مبين/g, /mubi+na?/g],
+  yarazzaq: [/فتاح/g, /fatt?a+h/g],
 }
 
 // Bilangan sebutan zikir dalam satu transkrip

@@ -49,6 +49,19 @@ export function useZikirCounter() {
       return { ...base, counts: { ...base.counts, [id]: (base.counts[id] ?? 0) + by } }
     })
 
+  // Tambah kiraan bagi zikir tertentu (contoh: dari halaman Amalan Rezeki)
+  const incrementFor = (id, by = 1) =>
+    setDay((prev) => {
+      const base = prev.date === todayKey() ? prev : emptyDay()
+      return { ...base, counts: { ...base.counts, [id]: (base.counts[id] ?? 0) + by } }
+    })
+
+  const resetFor = (id) =>
+    setDay((prev) => {
+      const base = prev.date === todayKey() ? prev : emptyDay()
+      return { ...base, counts: { ...base.counts, [id]: 0 } }
+    })
+
   const changeZikir = (step) =>
     setDay((prev) => {
       const base = prev.date === todayKey() ? prev : emptyDay()
@@ -59,5 +72,5 @@ export function useZikirCounter() {
   const resetCurrent = () =>
     setDay((prev) => ({ ...prev, counts: { ...prev.counts, [zikir.id]: 0 } }))
 
-  return { zikir, zikirCount, total, counts: current.counts, increment, changeZikir, resetCurrent }
+  return { zikir, zikirCount, total, counts: current.counts, increment, incrementFor, resetFor, changeZikir, resetCurrent }
 }
