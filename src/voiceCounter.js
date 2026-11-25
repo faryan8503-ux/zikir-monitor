@@ -36,7 +36,7 @@ export function countZikir(zikirId, transcript) {
   return Math.max(0, ...patterns.map((re) => (text.match(re) || []).length))
 }
 
-const Recognition = typeof window !== 'undefined' ? window.SpeechRecognition || window.webkitSpeechRecognition : undefined
+export const Recognition = typeof window !== 'undefined' ? window.SpeechRecognition || window.webkitSpeechRecognition : undefined
 export const voiceSupported = !!Recognition
 
 const ERRORS = {

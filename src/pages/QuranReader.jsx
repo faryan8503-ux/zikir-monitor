@@ -6,6 +6,7 @@ import BottomSheet from '../components/BottomSheet'
 import { RuleDetail, TajwidGuide } from '../components/TajwidInfo'
 import TadabburEditor from '../components/TadabburEditor'
 import TadabburSheet, { SurahIntro } from '../components/TadabburSheet'
+import RecitationChecker from '../components/RecitationChecker'
 import { noteKey, useTadabbur } from '../tadabbur/useTadabbur'
 import { TAJWID_GROUPS, TAJWID_RULES, WAQAF, WAQAF_COLOR } from '../quran/tajwid'
 import { go } from '../useHashRoute'
@@ -35,6 +36,7 @@ export default function QuranReader({ surah, focusAyat, openTadabbur, openNote }
   const [guideOpen, setGuideOpen] = useState(false)
   const [tadabburAyah, setTadabburAyah] = useState(openTadabbur && focusAyat ? focusAyat : null)
   const [noteAyah, setNoteAyah] = useState(openNote && focusAyat ? focusAyat : null)
+  const [checkAyah, setCheckAyah] = useState(null)
   const { notes } = useTadabbur()
   const showWaqaf = useCallback((key) => setDetail({ type: 'waqaf', key }), [])
   const { bookmark, readIndex, today, khatam, markRead } = useQuranProgress()
@@ -162,10 +164,14 @@ export default function QuranReader({ surah, focusAyat, openTadabbur, openNote }
                     <p className="text-[11px] font-medium text-plum-soft">
                       Juz {data.juz[i]} · Muka surat {data.page[i]}{isRead && !isBookmark ? ' · ✓ Sudah dibaca' : ''}
                     </p>
-                    <div className="mt-2 flex items-center justify-between gap-2">
+                    <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
                       <button type="button" onClick={() => setTadabburAyah(a)}
                         className="rounded-full bg-lilac-100 px-3 py-1.5 text-xs font-bold text-lilac-500 ring-1 ring-lilac-200 transition active:scale-95">
                         📖 Tadabbur{notes[noteKey(surah, a)] ? ' · 📝' : ''}
+                      </button>
+                      <button type="button" onClick={() => setCheckAyah(a)} aria-label={`Semak bacaan ayat ${a}`}
+                        className="rounded-full bg-white px-3 py-1.5 text-xs font-bold text-plum ring-1 ring-blush-200 transition active:scale-95">
+                        🎙️ Semak
                       </button>
                       {isBookmark ? (
                         <span className="rounded-full bg-blush-400 px-3 py-1.5 text-xs font-bold text-white">📍 Bacaan terakhir</span>
@@ -216,6 +222,13 @@ export default function QuranReader({ surah, focusAyat, openTadabbur, openNote }
             onChangeAyah={setTadabburAyah}
             onWriteNote={() => { setNoteAyah(tadabburAyah); setTadabburAyah(null) }}
             onClose={() => setTadabburAyah(null)} />
+        )}
+      </BottomSheet>
+      <BottomSheet open={!!checkAyah && !!data} onClose={() => setCheckAyah(null)} label="Semak bacaan" dismissible={false}>
+        {checkAyah && data && (
+          <RecitationChecker key={checkAyah} surah={surah} ayah={checkAyah} text={data.ar[checkAyah - 1]} wm={data.wm?.[checkAyah]}
+            onNext={checkAyah < data.ar.length ? () => setCheckAyah(checkAyah + 1) : null}
+            onClose={() => setCheckAyah(null)} />
         )}
       </BottomSheet>
       <BottomSheet open={!!noteAyah && !!data} onClose={() => setNoteAyah(null)} label="Catatan" dismissible={false}>
